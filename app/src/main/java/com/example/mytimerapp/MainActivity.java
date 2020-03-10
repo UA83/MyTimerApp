@@ -19,20 +19,13 @@ import org.w3c.dom.Text;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-
-//Start button should be disabled until valid entries (all numeric) are entered into H/M/S. At least one of the fields should be populated before the start button is enabled.
-
-//- Reset button is always enabled and will stop the current timer and clear the numerics in the text fields. This should disable start countdown button
-
-//- When the countdown is complete, a toast should appear ‘Countdown is complete’
-
-
-
-
-
-
-
-
+/*
+* 1 - Start button should be disabled until valid entries (all numeric) are entered into H/M/S.
+*   At least one of the fields should be populated before the start button is enabled.
+* 2 - Reset button is always enabled and will stop the current timer and clear the numerics in
+*   the text fields. This should disable start countdown button
+* 3 - When the countdown is complete, a toast should appear ‘Countdown is complete’
+*/
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,12 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Buttons
     private Button mButtonStart;
-    private Button mButtonPause;
     private Button mButtonReset;
 
     private CountDownTimer mCountDownTimer;
-
-    private boolean mTimerRunning;
 
     private long mTimeLeftInMillis = 0;
     private TextWatcher fieldWatcher = new TextWatcher() {
@@ -89,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set Buttons
         mButtonStart = findViewById(R.id.button_start);
-        mButtonPause = findViewById(R.id.button_pause);
+        //mButtonPause = findViewById(R.id.button_pause);
         mButtonReset = findViewById(R.id.button_reset);
 
         // Append Text change listeners
@@ -101,26 +91,18 @@ public class MainActivity extends AppCompatActivity {
         mButtonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Hide keyborad after start button is pressed
                 closeKeyboard();
+
+                // Get the total in seconds
                 int totalMilliseconds = getTotalMilliseconds();
                 startTimer(totalMilliseconds);
-                //mButtonPause.setEnabled(true);
-            }
-        });
-
-
-        mButtonPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseTimer();
             }
         });
 
         mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //resetTimer();
-
                 mCountDownTimer.cancel();
                 mEditTextViewHour.setText("");
                 mEditTextViewMinute.setText("");
@@ -129,38 +111,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     // do the maths ro return milliseconds
     private int getTotalMilliseconds() {
+        // Get the value from the input
         String hours = mEditTextViewHour.getText().toString();
         String minutes = mEditTextViewMinute.getText().toString();
         String seconds = mEditTextViewSecond.getText().toString();
 
-        int h, m, s;
-        h = m = s = 0;
+        // Initialise a int for hours, minute and second
+        // If any input is empty, it will assign a value of zero to it
+        int h = 0; int m = 0; int s = 0;
+
         if (!hours.isEmpty()) {
             h = Integer.parseInt(hours) * 3600000;
         }
+
         if (!minutes.isEmpty()) {
             m = Integer.parseInt(minutes) * 60000;
         }
+
         if (!seconds.isEmpty()) {
             s = Integer.parseInt(seconds) * 1000;
         }
 
+        // return a sum of seconds
         int total;
         total = h + m + s;
         return total;
     }
 
 
-    private void startTimer(int noOfMinutes) {
-        mCountDownTimer = new CountDownTimer(noOfMinutes, 1000) {
+    private void startTimer(int TotalOfMinutes) {
+        mCountDownTimer = new CountDownTimer(TotalOfMinutes, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long millis = millisUntilFinished;
                 //Convert milliseconds into hour, minute and seconds
-                String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                String hms = String.format(Locale.getDefault(),"%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
                 mTextViewCountDown.setText(hms);//set text
             }
             public void onFinish() {
@@ -171,12 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void pauseTimer() {
-        mCountDownTimer.cancel();
-        mTimerRunning = false;
-    }
-
-
+    // Method tho hide keyboard after the button start is pressed.
+    // Got this method from https://codinginflow.com/tutorials/android/countdowntimer/part-4-time-input
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -184,5 +167,4 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
 }

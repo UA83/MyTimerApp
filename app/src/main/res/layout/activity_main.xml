@@ -64,17 +64,6 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_text_minute" />
 
     <Button
-        android:id="@+id/button_pause"
-        android:layout_width="315dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:enabled="false"
-        android:text="@string/text_pause"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_start" />
-
-    <Button
         android:id="@+id/button_reset"
         android:layout_width="315dp"
         android:layout_height="wrap_content"
@@ -83,7 +72,7 @@
         android:text="@string/text_reset"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_pause" />
+        app:layout_constraintTop_toBottomOf="@+id/button_start" />
 
     <TextView
         android:id="@+id/text_view_countdown"
