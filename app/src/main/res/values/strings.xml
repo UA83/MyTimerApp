@@ -2,7 +2,7 @@
     <string name="app_name">My Timer App</string>
     <string name="text_start">start</string>
     <string name="text_pause">pause</string>
-    <string name="text_reset">reset</string>
+    <string name="text_reset">stop</string>
     <string name="text_hint_hh">HH</string>
     <string name="text_hint_mm">MM</string>
     <string name="text_hint_ss">SS</string>

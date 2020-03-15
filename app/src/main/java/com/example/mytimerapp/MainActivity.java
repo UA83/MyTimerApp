@@ -22,8 +22,10 @@ import java.util.concurrent.TimeUnit;
 /*
 * 1 - Start button should be disabled until valid entries (all numeric) are entered into H/M/S.
 *   At least one of the fields should be populated before the start button is enabled.
+*
 * 2 - Reset button is always enabled and will stop the current timer and clear the numerics in
 *   the text fields. This should disable start countdown button
+*
 * 3 - When the countdown is complete, a toast should appear ‘Countdown is complete’
 */
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButtonReset;
 
     private CountDownTimer mCountDownTimer;
+    private boolean running;
 
     private long mTimeLeftInMillis = 0;
     private TextWatcher fieldWatcher = new TextWatcher() {
@@ -91,22 +94,31 @@ public class MainActivity extends AppCompatActivity {
         mButtonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Hide keyborad after start button is pressed
-                closeKeyboard();
-
-                // Get the total in seconds
-                int totalMilliseconds = getTotalMilliseconds();
-                startTimer(totalMilliseconds);
+                if (!running) {
+                    // Hide keyborad after start button is pressed
+                    closeKeyboard();
+                    mButtonReset.setText("Stop");
+                    // Get the total in seconds
+                    int totalMilliseconds = getTotalMilliseconds();
+                    startTimer(totalMilliseconds);
+                    running = true;
+                }
             }
         });
 
         mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCountDownTimer.cancel();
-                mEditTextViewHour.setText("");
-                mEditTextViewMinute.setText("");
-                mEditTextViewSecond.setText("");
+                if (running) {
+                    mCountDownTimer.cancel();
+                    mEditTextViewHour.setText("");
+                    mEditTextViewMinute.setText("");
+                    mEditTextViewSecond.setText("");
+                    mButtonReset.setText("Reset");
+                    running = false;
+                } else {
+                    Toast.makeText(MainActivity.this, "Countdown is not running, Please enter a value in the fields above.", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -151,14 +163,14 @@ public class MainActivity extends AppCompatActivity {
                 mTextViewCountDown.setText(hms);//set text
             }
             public void onFinish() {
-                Toast.makeText(MainActivity.this, "Countdown is complete", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(MainActivity.this, "Countdown is complete", Toast.LENGTH_LONG).show();
+                running = false;
             }
         }.start();
 
     }
 
-    // Method tho hide keyboard after the button start is pressed.
+    // Method to hide keyboard after the button start is pressed.
     // Got this method from https://codinginflow.com/tutorials/android/countdowntimer/part-4-time-input
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
