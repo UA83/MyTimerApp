@@ -117,7 +117,13 @@ public class MainActivity extends AppCompatActivity {
                     mButtonReset.setText("Reset");
                     running = false;
                 } else {
-                    Toast.makeText(MainActivity.this, "Countdown is not running, Please enter a value in the fields above.", Toast.LENGTH_LONG).show();
+                    mEditTextViewHour.setText("");
+                    mEditTextViewMinute.setText("");
+                    mEditTextViewSecond.setText("");
+                    mTextViewCountDown.setText("00:00:00");//set text
+
+                    closeKeyboard();
+                    //Toast.makeText(MainActivity.this, "Countdown is not running, Please enter a value in the fields above.", Toast.LENGTH_LONG).show();
                 }
             }
         });
